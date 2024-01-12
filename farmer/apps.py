@@ -1,6 +1,6 @@
 from django.apps import AppConfig
 
 
-class FarmConfig(AppConfig):
+class FarmerConfig(AppConfig):
     default_auto_field = 'django.db.models.BigAutoField'
-    name = 'farm'
+    name = 'farmer'
