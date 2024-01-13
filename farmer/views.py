@@ -1,4 +1,4 @@
-# api/views.py
+# farmers/views.py
 from rest_framework import generics
 from .models import Farmer, Product, Order
 from .serializers import FarmerSerializer, ProductSerializer, OrderSerializer

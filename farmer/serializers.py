@@ -1,4 +1,4 @@
-# api/serializers.py
+# farmers/serializers.py
 from rest_framework import serializers
 from .models import Farmer, Product, Order
 

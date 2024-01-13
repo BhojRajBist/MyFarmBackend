@@ -1,33 +1,42 @@
+# farmers/models.py
 from django.db import models
 
-# Create your models here.
-
-
-
-
-
 class Farmer(models.Model):
-    uname = models.CharField(max_length=100)
-    email = models.EmailField(unique=True)
-    contact = models.CharField(max_length=15)
-    country = models.CharField(max_length=50)
-    sex = models.CharField(max_length=10)
-    password = models.CharField(max_length=50)
+    farm_name = models.CharField(max_length=100)
+    email_or_contact = models.CharField(max_length=100)
+    farm_type = models.CharField(max_length=50)
+    location = models.CharField(max_length=255)
+
+    def __str__(self):
+        return self.farm_name
 
 
+# farmers/models.py
 class Product(models.Model):
-    # Assuming Product is associated with a Farmer
     farmer = models.ForeignKey(Farmer, on_delete=models.CASCADE)
-    name = models.CharField(max_length=100)
-    price = models.DecimalField(max_digits=10, decimal_places=2)
-    description = models.TextField()
+    product_photo = models.ImageField(upload_to='product_photos/')
+    product_name = models.CharField(max_length=100)
+    quantity_available = models.PositiveIntegerField()
+    price_per_unit = models.DecimalField(max_digits=10, decimal_places=2)
+
+    def __str__(self):
+        return self.product_name
 
 
-
+# farmers/models.py
 class Order(models.Model):
-    # Assuming Order is associated with a Product and a Farmer
     product = models.ForeignKey(Product, on_delete=models.CASCADE)
-    farmer = models.ForeignKey(Farmer, on_delete=models.CASCADE)
-    quantity = models.PositiveIntegerField()
-    total_price = models.DecimalField(max_digits=10, decimal_places=2)
-    
+    quantity_ordered = models.PositiveIntegerField()
+    created_at = models.DateTimeField(auto_now_add=True)
+
+    def save(self, *args, **kwargs):
+        # Update product quantity and delete if quantity is finished
+        self.product.quantity_available -= self.quantity_ordered
+        if self.product.quantity_available <= 0:
+            self.product.delete()
+        else:
+            self.product.save()
+        super(Order, self).save(*args, **kwargs)
+
+    def __str__(self):
+        return f"{self.product.product_name} - {self.quantity_ordered}"
