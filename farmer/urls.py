@@ -1,8 +1,10 @@
 # api/urls.py
-
 from django.urls import path
-from .views import FarmerPostList
+from .views import FarmerListCreateView, ProductListCreateView, OrderListCreateView
 
 urlpatterns = [
-     path('farmer-posts/', FarmerPostList.as_view(), name='farmer-post-list'),
+    path('farmers/', FarmerListCreateView.as_view(), name='farmer-list-create'),
+    path('products/', ProductListCreateView.as_view(), name='product-list-create'),
+    path('orders/', OrderListCreateView.as_view(), name='order-list-create'),
+    # Add more URLs as needed
 ]

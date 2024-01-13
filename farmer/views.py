@@ -1,11 +1,16 @@
-from django.shortcuts import render
+# api/views.py
+from rest_framework import generics
+from .models import Farmer, Product, Order
+from .serializers import FarmerSerializer, ProductSerializer, OrderSerializer
 
-# Create your views here.
+class FarmerListCreateView(generics.ListCreateAPIView):
+    queryset = Farmer.objects.all()
+    serializer_class = FarmerSerializer
 
-from rest_framework.generics import ListCreateAPIView
-from .models import FarmerPost
-from .serializers import FarmerPostSerializer
+class ProductListCreateView(generics.ListCreateAPIView):
+    queryset = Product.objects.all()
+    serializer_class = ProductSerializer
 
-class FarmerPostList(ListCreateAPIView):
-    queryset = FarmerPost.objects.all()
-    serializer_class = FarmerPostSerializer
+class OrderListCreateView(generics.ListCreateAPIView):
+    queryset = Order.objects.all()
+    serializer_class = OrderSerializer
