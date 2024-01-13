@@ -12,7 +12,7 @@ class Buyer(models.Model):
 
 class Order(models.Model):
     buyer = models.ForeignKey(Buyer, on_delete=models.CASCADE)
-    product = models.ForeignKey('farmer.Product', on_delete=models.CASCADE, related_name='buyer_orders')  # Specify related_name
+    product = models.ForeignKey(Product, on_delete=models.CASCADE, related_name='buyer_orders')  # Specify related_name
     quantity_ordered = models.PositiveIntegerField()
 
     def __str__(self):
