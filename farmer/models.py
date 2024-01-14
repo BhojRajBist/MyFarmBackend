@@ -1,6 +1,7 @@
 # farmers/models.py
 from django.db import models
 
+
 class Farmer(models.Model):
     farm_name = models.CharField(max_length=100)
     email_or_contact = models.CharField(max_length=100)
@@ -41,19 +42,10 @@ class Product(models.Model):
 
 # farmers/models.py
 class Order(models.Model):
-    product = models.ForeignKey(Product, on_delete=models.CASCADE)
+    product = models.ForeignKey(Product, on_delete=models.CASCADE, related_name='farmer_orders')
     quantity_ordered = models.PositiveIntegerField()
-    buyer_name = models.CharField(max_length=255)
-    created_at = models.DateTimeField(auto_now_add=True)
-
-    def save(self, *args, **kwargs):
-        # Update product quantity and delete if quantity is finished
-        self.product.quantity_available -= self.quantity_ordered
-        if self.product.quantity_available <= 0:
-            self.product.delete()
-        else:
-            self.product.save()
-        super(Order, self).save(*args, **kwargs)
+    buyer_name = models.CharField(max_length=100)
 
     def __str__(self):
-        return f"{self.product.product_name} - {self.quantity_ordered}"
+        return f"{self.product.product_name} - {self.buyer_name}"
+
