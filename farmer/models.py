@@ -12,6 +12,16 @@ class Farmer(models.Model):
 
 
 # farmers/models.py
+# class Product(models.Model):
+#     farmer = models.ForeignKey(Farmer, on_delete=models.CASCADE)
+#     product_photo = models.ImageField(upload_to='product_photos/')
+#     product_name = models.CharField(max_length=100)
+#     quantity_available = models.PositiveIntegerField()
+#     price_per_unit = models.DecimalField(max_digits=10, decimal_places=2)
+
+#     def __str__(self):
+#         return self.product_name
+    
 class Product(models.Model):
     farmer = models.ForeignKey(Farmer, on_delete=models.CASCADE)
     product_photo = models.ImageField(upload_to='product_photos/')
@@ -19,8 +29,14 @@ class Product(models.Model):
     quantity_available = models.PositiveIntegerField()
     price_per_unit = models.DecimalField(max_digits=10, decimal_places=2)
 
-    def __str__(self):
-        return self.product_name
+    def place_order(self, quantity_ordered, buyer_name):
+        if self.quantity_available >= quantity_ordered:
+            order = Order.objects.create(product=self, quantity_ordered=quantity_ordered, buyer_name=buyer_name)
+            self.quantity_available -= quantity_ordered
+            self.save()
+            return order
+        else:
+            return None
 
 
 # farmers/models.py
