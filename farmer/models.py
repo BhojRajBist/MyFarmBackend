@@ -18,7 +18,6 @@ class Product(models.Model):
     product_name = models.CharField(max_length=100)
     quantity_available = models.PositiveIntegerField()
     price_per_unit = models.DecimalField(max_digits=10, decimal_places=2)
-    product = models.ForeignKey('Product', on_delete=models.CASCADE, related_name='farmer_orders')  # Specify related_name
 
     def __str__(self):
         return self.product_name
@@ -28,6 +27,7 @@ class Product(models.Model):
 class Order(models.Model):
     product = models.ForeignKey(Product, on_delete=models.CASCADE)
     quantity_ordered = models.PositiveIntegerField()
+    buyer_name = models.CharField(max_length=255)
     created_at = models.DateTimeField(auto_now_add=True)
 
     def save(self, *args, **kwargs):
