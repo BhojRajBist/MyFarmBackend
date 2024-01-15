@@ -39,7 +39,7 @@ class Product(models.Model):
         else:
             return None
 
-
+from buyer.models import *
 # farmers/models.py
 class Order(models.Model):
     product = models.ForeignKey(Product, on_delete=models.CASCADE, related_name='farmer_orders')
@@ -47,5 +47,11 @@ class Order(models.Model):
     buyer_name = models.CharField(max_length=100)
 
     def __str__(self):
-        return f"{self.product.product_name} - {self.buyer_name}"
+        return f"{self.buyer_name}'s order for {self.quantity_ordered} units of {self.product.product_name}"
+
+    def get_buyer_name(self):
+        return self.buyer_name
+
+    def get_quantity_ordered(self):
+        return self.quantity_ordered
 
