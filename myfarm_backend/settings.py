@@ -39,10 +39,15 @@ INSTALLED_APPS = [
     'django.contrib.staticfiles',
     'farmer',
     'buyer',
-    'authsystem',
+    # 'authsystem',
+    'api',
     'rest_framework',
     'corsheaders',
 ]
+
+
+AUTH_USER_MODEL = 'api.User'
+
 
 MIDDLEWARE = [
     'django.middleware.security.SecurityMiddleware',
