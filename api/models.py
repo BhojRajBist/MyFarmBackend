@@ -1,7 +1,7 @@
 from django.db import models
 from django.db.models.signals import post_save
 from django.contrib.auth.models import AbstractUser
-import uuid
+from django.utils import timezone
 
 
 class User(AbstractUser):
@@ -14,12 +14,6 @@ class User(AbstractUser):
 
     def profile(self):
         profile = Profile.objects.get(user=self)
-        
-    def get_reset_password_token(self):
-        token = str(uuid.uuid4())  # Generate a unique token
-        self.reset_password_token = token
-        self.save()
-        return token
 
 class Profile(models.Model):
     user = models.OneToOneField(User, on_delete=models.CASCADE)
@@ -35,12 +29,22 @@ def create_user_profile(sender, instance, created, **kwargs):
 
 def save_user_profile(sender, instance, **kwargs):
     instance.profile.save()
-
-
-
-
+    
+class PasswordReset(models.Model):
+    user = models.ForeignKey(User, on_delete=models.CASCADE)
+    token = models.CharField(max_length=100, unique=True)
+    timestamp = models.DateTimeField(default=timezone.now)
 
 post_save.connect(create_user_profile, sender=User)
 post_save.connect(save_user_profile, sender=User)
 
+from django.db import models
 
+
+class QuizResult(models.Model):
+    time_taken = models.CharField(max_length=255)
+    score = models.IntegerField()
+    percentage = models.FloatField()
+
+    def __str__(self):
+        return f"{self.time_taken} - Score: {self.score} - Percentage: {self.percentage}%"

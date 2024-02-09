@@ -1,4 +1,6 @@
-#!/home/bhoj/Desktop/MyFarmBackend/myvenv/bin/python3
+#!/bin/sh
+'''exec' "/home/bhoj/Desktop/Django template/myvenv/bin/python3" "$0" "$@"
+' '''
 # -*- coding: utf-8 -*-
 import re
 import sys

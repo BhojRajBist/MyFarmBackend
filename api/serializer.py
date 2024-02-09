@@ -4,7 +4,6 @@ from rest_framework_simplejwt.serializers import TokenObtainPairSerializer
 from rest_framework import serializers
 from rest_framework.validators import UniqueValidator
 from rest_framework_simplejwt.serializers import TokenObtainPairSerializer
-from django.contrib.auth import get_user_model
 
 class UserSerializer(serializers.ModelSerializer):
     class Meta:
@@ -55,12 +54,18 @@ class RegisterSerializer(serializers.ModelSerializer):
 
         return user
     
-    
-class ResetPasswordEmailSerializer(serializers.Serializer):
+class PasswordResetSerializer(serializers.Serializer):
     email = serializers.EmailField()
+    
+    
+from .models import QuizResult
 
-    def validate_email(self, value):
-        user = get_user_model().objects.filter(email=value)
-        if not user.exists():
-            raise serializers.ValidationError('No user with this email.')
-        return value
+
+from rest_framework import serializers
+from .models import QuizResult
+
+class QuizResultSerializer(serializers.ModelSerializer):
+    class Meta:
+        model = QuizResult
+        fields = ['time_taken', 'score', 'percentage']
+    
