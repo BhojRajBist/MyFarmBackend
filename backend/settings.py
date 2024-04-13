@@ -48,6 +48,8 @@ INSTALLED_APPS = [
     
     # Custom
     'api',
+    'farmer',
+    'buyer',
     
     # Third Party
     'import_export',
