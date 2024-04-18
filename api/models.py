@@ -1,50 +1,19 @@
 from django.db import models
-from django.db.models.signals import post_save
+
+# Create your models here.
+# api/models.py
 from django.contrib.auth.models import AbstractUser
-from django.utils import timezone
 
 
-class User(AbstractUser):
-    username = models.CharField(max_length=100)
-    email = models.EmailField(unique=True)
+class CustomUser(AbstractUser):
+    is_farmer = models.BooleanField(default=False)
+    is_buyer = models.BooleanField(default=False)
+    latitude = models.DecimalField(max_digits=9, decimal_places=6, null=True, blank=True)
+    longitude = models.DecimalField(max_digits=9, decimal_places=6, null=True, blank=True)
 
-    USERNAME_FIELD = 'email'
-    REQUIRED_FIELDS = ['username']
-
-
-    def profile(self):
-        profile = Profile.objects.get(user=self)
-
-class Profile(models.Model):
-    user = models.OneToOneField(User, on_delete=models.CASCADE)
-    full_name = models.CharField(max_length=1000)
-    bio = models.CharField(max_length=100)
-    image = models.ImageField(upload_to="user_images", default="default.jpg")
-    verified = models.BooleanField(default=False)
-
-
-def create_user_profile(sender, instance, created, **kwargs):
-    if created:
-        Profile.objects.create(user=instance)
-
-def save_user_profile(sender, instance, **kwargs):
-    instance.profile.save()
-    
-class PasswordReset(models.Model):
-    user = models.ForeignKey(User, on_delete=models.CASCADE)
-    token = models.CharField(max_length=100, unique=True)
-    timestamp = models.DateTimeField(default=timezone.now)
-
-post_save.connect(create_user_profile, sender=User)
-post_save.connect(save_user_profile, sender=User)
-
-from django.db import models
-
-
-class QuizResult(models.Model):
-    time_taken = models.CharField(max_length=255)
-    score = models.IntegerField()
-    percentage = models.FloatField()
+    # Add related_name attributes to avoid clash with auth.User model
+    groups = models.ManyToManyField('auth.Group', related_name='custom_user_groups')
+    user_permissions = models.ManyToManyField('auth.Permission', related_name='custom_user_permissions')
 
     def __str__(self):
-        return f"{self.time_taken} - Score: {self.score} - Percentage: {self.percentage}%"
+        return self.username
