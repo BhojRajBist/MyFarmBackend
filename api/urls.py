@@ -1,11 +1,13 @@
-# api/urls.py
 from django.urls import path
-from .views import registration_view, login_view, logout_view, password_reset_view, profile_view
+from api.views import SendPasswordResetEmailView,  UserActivationView, UserChangePasswordView, UserLoginView, UserProfileView, UserRegistrationView, UserPasswordResetView
 
 urlpatterns = [
-    path('register/', registration_view, name='register'),
-    path('login/', login_view, name='login'),
-    path('logout/', logout_view, name='logout'),
-    path('password-reset/', password_reset_view, name='password_reset'),
-    path('profile/', profile_view, name='profile'),
+    path('register/', UserRegistrationView.as_view(), name='register'),
+    path('activate/<uid>/<token>/', UserActivationView.as_view(), name='activate'),
+    path('login/', UserLoginView.as_view(), name='login'),
+    path('profile/', UserProfileView.as_view(), name='profile'),
+    path('changepassword/', UserChangePasswordView.as_view(), name='changepassword'),
+    path('send-reset-password-email/', SendPasswordResetEmailView.as_view(), name='send-reset-password-email'),
+    path('reset-password/<uid>/<token>/', UserPasswordResetView.as_view(), name='reset-password'),
+
 ]
